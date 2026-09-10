@@ -1,0 +1,30 @@
+name: Auto-merge Exercism backups
+
+# Exercism's GitHub sync opens a pull request for every published solution
+# This merges those automatically and leaves any other PR alone.
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+
+# Only ever have one merge running at a time per PR.
+concurrency:
+  group: automerge-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event.pull_request.user.login == 'exercism-solutions-syncer[bot]' &&
+      github.event.pull_request.base.ref == github.event.repository.default_branch
+    steps:
+      - name: Merge the pull request
+        run: gh pr merge "$PR_URL" --squash --admin --delete-branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}

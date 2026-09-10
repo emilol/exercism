@@ -1,0 +1,24 @@
+# Normalize every text file to LF inside the repo, and check it out as LF on
+# every platform. This overrides a machine's core.autocrlf, so clones are
+# byte-identical and CRLF can't leak back in through a Windows editor.
+* text=auto eol=lf
+
+# Windows shell scripts genuinely need CRLF to run.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files: never touch line endings.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.zip  binary
+*.gz   binary
+*.jar  binary
+*.class binary
+*.woff  binary
+*.woff2 binary
+*.eot   binary
+*.ttf   binary
